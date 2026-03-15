@@ -1,0 +1,1 @@
+from .models import User, Hospital, seed_hospitals # imports the User and Hospital classes, and the seed_hospitals function from the models file in the same package (current folder) so they can be used in the current file
