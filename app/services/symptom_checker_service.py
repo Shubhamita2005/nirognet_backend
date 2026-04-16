@@ -1,7 +1,11 @@
 import google.generativeai as genai #google.generativeai → Google’s Gemini SDK (used to call Gemini models)
-import os #os → lets you read environment variables like API keys
+ #os → lets you read environment variables like API keys
 
-api_key = os.getenv("GEMINI_API_KEY") #Reads GEMINI_API_KEY from your system environment. If it exists → real Gemini API can be used. If not → you should fall back to mock mode
+
+ #Reads GEMINI_API_KEY from your system environment. If it exists → real Gemini API can be used. If not → you should fall back to mock mode
+from app.config.settings import GEMINI_API_KEY
+
+api_key = GEMINI_API_KEY
 if not api_key:
     FORCE_MOCK_MODE = True
 else:
@@ -9,12 +13,12 @@ else:
 
 
 # Try 1.5-flash, fallback to mock if quota issues
-FORCE_MOCK_MODE = False  # Set to True to always use mock
+FORCE_MOCK_MODE = False
 
-try:
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
-except:
+if not api_key:
     FORCE_MOCK_MODE = True
+else:
+    genai.configure(api_key=api_key)
 
 def analyze_symptoms_with_gemini(symptom_text: str) -> str:
     # Try real API first
