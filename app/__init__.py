@@ -46,7 +46,7 @@ def create_app():
     gemini_key = os.getenv("GEMINI_API_KEY")    #Reads Gemini API key from environment
     if gemini_key:     #If key exists → configure Gemini
         genai.configure(api_key=gemini_key)    #Authenticates Gemini SDK
-        app.gemini_model = genai.GenerativeModel("gemini-1.5-flash-latest")   #Creates AI model instance and stores it on app
+        app.gemini_model = genai.GenerativeModel("gemini-2.5-flash")   #Creates AI model instance and stores it on app
     else:
         app.gemini_model = None
         print("GEMINI_API_KEY not set")     #Safe fallback if key is missing
