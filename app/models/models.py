@@ -216,3 +216,21 @@ class Consultation(db.Model):
             "date_time": self.date_time.isoformat(),
             "status": self.status
         }
+
+class Medicine(db.Model):
+    __tablename__ = 'medicines'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "category": self.category,
+            "description": self.description,
+            "created_at": self.created_at
+    }

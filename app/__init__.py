@@ -11,6 +11,7 @@ from app.routes.main_routes import main_bp      #Imports Blueprints where each b
 from  app.routes.auth_routes import auth_bp
 from app.routes.symptom_routes import symptom_bp
 from app.routes.emergency_chat_routes import emergency_chat_bp
+from app.routes.medicine_availablity_routes import medicine_bp
 
 def create_app():
     # -----------------------
@@ -91,6 +92,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(symptom_bp)
     app.register_blueprint(emergency_chat_bp)
+    app.register_blueprint(medicine_bp, url_prefix='/api')
 
     # -----------------------
     # Health check
