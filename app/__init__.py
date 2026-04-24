@@ -27,7 +27,7 @@ def create_app():
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))    #Gets the absolute path of the app/ directory
 
     app.config.update(     #Sets multiple Flask configuration values at once
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(BASE_DIR, "app.db"),    #SQLite database stored as app.db inside app/
+        SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL"),   #SQLite database stored as app.db inside app/
         SQLALCHEMY_TRACK_MODIFICATIONS=False,   #Disables unnecessary SQLAlchemy tracking
         SECRET_KEY=os.getenv("SECRET_KEY", "dev-secret"),     #Flask’s internal security key, Uses env value if present, Falls back to "dev-secret" for development
         JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY", "dev-jwt-secret"),    #Secret key used to sign JWT tokens

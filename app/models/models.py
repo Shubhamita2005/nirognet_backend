@@ -1,6 +1,6 @@
 from app.extensions import db  #Imports the SQLAlchemy database instance (db), allows to create database tables, define models, run queries, save data.
 from werkzeug.security import generate_password_hash, check_password_hash # imports generate_password_hash (to securely hash passwords before storing them) and check_password_hash (to verify a password against the stored hash) from Werkzeug
-
+from datetime import datetime
 
 # =========================
 # User Model (UNCHANGED LOGIC)
@@ -120,3 +120,99 @@ def seed_hospitals(): #This function inserts default hospital data into the data
 
     db.session.add_all(hospitals) #Adds all hospital objects to the database session.
     db.session.commit() #Actually writes the data into the database.
+
+
+
+# =========================
+# Specialty Model
+# =========================
+class Specialty(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True, nullable=False)
+
+    def to_dict(self):
+        return {"id": self.id, "name": self.name}
+
+
+# =========================
+# Doctor Model
+# =========================
+class Doctor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    specialty_id = db.Column(db.Integer, db.ForeignKey("specialty.id"))
+    specialty = db.relationship("Specialty", backref="doctors")
+    available = db.Column(db.Boolean, default=True)
+    contact = db.Column(db.String(50), nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "specialty": self.specialty.name if self.specialty else None,
+            "available": self.available,
+            "contact": self.contact,
+        }
+
+
+# =========================
+# Consultation Model
+# =========================
+class Consultation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey("doctor.id"), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)  # Can link to User table if exists
+    date_time = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(50), default="pending")  # pending, confirmed, completed
+
+    doctor = db.relationship("Doctor", backref="consultations")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "doctor": self.doctor.to_dict(),
+            "user_id": self.user_id,
+            "date_time": self.date_time.isoformat(),
+            "status": self.status,
+        }
+
+       
+
+# ----------------------
+# Appointment Type
+# ----------------------
+class AppointmentType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)  # Online / Offline
+    description = db.Column(db.String(200), nullable=True)
+    icon = db.Column(db.String(50), nullable=True)   # Store icon name or identifier
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "icon": self.icon
+        }
+
+# ----------------------
+# Consultation Booking
+# ----------------------
+class Consultation(db.Model):
+    __table_args__ = {'extend_existing': True}  # <-- add this line
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    doctor_id = db.Column(db.Integer, nullable=False)
+    appointment_type_id = db.Column(db.Integer, db.ForeignKey('appointment_type.id'), nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(20), default="pending")  # pending / confirmed / completed
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "doctor_id": self.doctor_id,
+            "appointment_type_id": self.appointment_type_id,
+            "date_time": self.date_time.isoformat(),
+            "status": self.status
+        }
