@@ -1,8 +1,8 @@
 from flask import request, jsonify
 from flask_jwt_extended import get_jwt_identity
-from app.services.book_consultation_service import (
+from app.services.book_consultation_services import (
     list_specialties,
-    list_doctors_by_specialty,
+    list_doctors_flat,
     book_consultation,
     list_user_consultations,
 )
@@ -19,7 +19,7 @@ def get_specialties():
 # Get doctors by specialty
 # -----------------------
 def get_doctors(specialty_id: int):
-    doctors = list_doctors_by_specialty(specialty_id)
+    doctors = list_doctors_flat(specialty_id)
     return jsonify({"doctors": doctors}), 200
 
 # -----------------------

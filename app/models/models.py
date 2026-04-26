@@ -80,46 +80,46 @@ class Hospital(db.Model): #Creates a hospital table.
 # =========================
 # Seed Data (OPTIONAL, SAFE)
 # =========================
-def seed_hospitals(): #This function inserts default hospital data into the database, used when the database is empty.
-    #It only inserts hospitals if none exist, so it won't duplicate data.
-    """
-    Seed hospital data only if table is empty.
-    Safe to call multiple times.
-    """
-    #Check if any hospital already exists.
-    if Hospital.query.first():
-        return
+# def seed_hospitals(): #This function inserts default hospital data into the database, used when the database is empty.
+#     #It only inserts hospitals if none exist, so it won't duplicate data.
+#     """
+#     Seed hospital data only if table is empty.
+#     Safe to call multiple times.
+#     """
+#     #Check if any hospital already exists.
+#     if Hospital.query.first():
+#         return
 
-    #creates a list of Hospital objects with details like name, distance, number of doctors, beds, ventilators, and blood stock
-    hospitals = [
-        Hospital(
-            name="City General Hospital",
-            distance="0.8 km",
-            doctors=45,
-            beds="120 (ICU: 25, Emergency: 30)",
-            ventilators="15 (Available)",
-            blood="Full Stock",
-        ),
-        Hospital(
-            name="Metro Medical Center",
-            distance="1.2 km",
-            doctors=62,
-            beds="180 (ICU: 35, Emergency: 45)",
-            ventilators="22 (Available)",
-            blood="Limited Stock",
-        ),
-        Hospital(
-            name="Regional Health Institute",
-            distance="2.1 km",
-            doctors=38,
-            beds="95 (ICU: 18, Emergency: 20)",
-            ventilators="12 (Available)",
-            blood="Full Stock",
-        ),
-    ]
+#     #creates a list of Hospital objects with details like name, distance, number of doctors, beds, ventilators, and blood stock
+#     hospitals = [
+#         Hospital(
+#             name="City General Hospital",
+#             distance="0.8 km",
+#             doctors=45,
+#             beds="120 (ICU: 25, Emergency: 30)",
+#             ventilators="15 (Available)",
+#             blood="Full Stock",
+#         ),
+#         Hospital(
+#             name="Metro Medical Center",
+#             distance="1.2 km",
+#             doctors=62,
+#             beds="180 (ICU: 35, Emergency: 45)",
+#             ventilators="22 (Available)",
+#             blood="Limited Stock",
+#         ),
+#         Hospital(
+#             name="Regional Health Institute",
+#             distance="2.1 km",
+#             doctors=38,
+#             beds="95 (ICU: 18, Emergency: 20)",
+#             ventilators="12 (Available)",
+#             blood="Full Stock",
+#         ),
+#     ]
 
-    db.session.add_all(hospitals) #Adds all hospital objects to the database session.
-    db.session.commit() #Actually writes the data into the database.
+#     db.session.add_all(hospitals) #Adds all hospital objects to the database session.
+#     db.session.commit() #Actually writes the data into the database.
 
 
 
@@ -158,23 +158,23 @@ class Doctor(db.Model):
 # =========================
 # Consultation Model
 # =========================
-class Consultation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey("doctor.id"), nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)  # Can link to User table if exists
-    date_time = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(50), default="pending")  # pending, confirmed, completed
+# class Consultation(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     doctor_id = db.Column(db.Integer, db.ForeignKey("doctor.id"), nullable=False)
+#     user_id = db.Column(db.Integer, nullable=False)  # Can link to User table if exists
+#     date_time = db.Column(db.DateTime, default=datetime.utcnow)
+#     status = db.Column(db.String(50), default="pending")  # pending, confirmed, completed
 
-    doctor = db.relationship("Doctor", backref="consultations")
+#     doctor = db.relationship("Doctor", backref="consultations")
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "doctor": self.doctor.to_dict(),
-            "user_id": self.user_id,
-            "date_time": self.date_time.isoformat(),
-            "status": self.status,
-        }
+#     def to_dict(self):
+#         return {
+#             "id": self.id,
+#             "doctor": self.doctor.to_dict(),
+#             "user_id": self.user_id,
+#             "date_time": self.date_time.isoformat(),
+#             "status": self.status,
+#         }
 
        
 
@@ -198,24 +198,24 @@ class AppointmentType(db.Model):
 # ----------------------
 # Consultation Booking
 # ----------------------
-class Consultation(db.Model):
-    __table_args__ = {'extend_existing': True}  # <-- add this line
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    doctor_id = db.Column(db.Integer, nullable=False)
-    appointment_type_id = db.Column(db.Integer, db.ForeignKey('appointment_type.id'), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(20), default="pending")  # pending / confirmed / completed
+# class Consultation(db.Model):
+#     __table_args__ = {'extend_existing': True}  # <-- add this line
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, nullable=False)
+#     doctor_id = db.Column(db.Integer, nullable=False)
+#     appointment_type_id = db.Column(db.Integer, db.ForeignKey('appointment_type.id'), nullable=False)
+#     date_time = db.Column(db.DateTime, nullable=False)
+#     status = db.Column(db.String(20), default="pending")  # pending / confirmed / completed
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "doctor_id": self.doctor_id,
-            "appointment_type_id": self.appointment_type_id,
-            "date_time": self.date_time.isoformat(),
-            "status": self.status
-        }
+#     def to_dict(self):
+#         return {
+#             "id": self.id,
+#             "user_id": self.user_id,
+#             "doctor_id": self.doctor_id,
+#             "appointment_type_id": self.appointment_type_id,
+#             "date_time": self.date_time.isoformat(),
+#             "status": self.status
+#         }
 
 class Medicine(db.Model):
     __tablename__ = 'medicines'
@@ -234,3 +234,15 @@ class Medicine(db.Model):
             "description": self.description,
             "created_at": self.created_at
     }
+
+class DoctorSchedule(db.Model):
+    __tablename__ = "doctor_schedule"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    doctor_id = db.Column(db.Integer, db.ForeignKey("doctor.id"), nullable=False)
+    hospital_id = db.Column(db.Integer, db.ForeignKey("hospital.id"), nullable=False)
+
+    day_of_week = db.Column(db.String(20), nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)

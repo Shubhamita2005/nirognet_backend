@@ -12,6 +12,7 @@ from  app.routes.auth_routes import auth_bp
 from app.routes.symptom_routes import symptom_bp
 from app.routes.emergency_chat_routes import emergency_chat_bp
 from app.routes.medicine_availablity_routes import medicine_bp
+from app.routes.book_consultation_routes import book_bp
 
 def create_app():
     # -----------------------
@@ -55,9 +56,8 @@ def create_app():
     # -----------------------
     # Create tables (dev only)
     # -----------------------
-    with app.app_context():    #Required for DB operations outside requests
-        db.create_all()    #Creates all tables defined in models, runs once at startup
-
+   #Required for DB operations outside requests
+        #Creates all tables defined in models, runs once at startup
     # -----------------------
     # JWT error handlers
     # -----------------------
@@ -93,6 +93,7 @@ def create_app():
     app.register_blueprint(symptom_bp)
     app.register_blueprint(emergency_chat_bp)
     app.register_blueprint(medicine_bp, url_prefix='/api')
+    app.register_blueprint(book_bp)
 
     # -----------------------
     # Health check

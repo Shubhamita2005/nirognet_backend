@@ -1,4 +1,4 @@
-from app.models import Specialty, Doctor, Consultation
+from app.models import Specialty, Doctor, DoctorSchedule, Hospital
 from app.extensions import db
 from datetime import datetime
 
@@ -39,3 +39,27 @@ def book_consultation(user_id: int, doctor_id: int, date_time: datetime):
 def list_user_consultations(user_id: int):
     consultations = Consultation.query.filter_by(user_id=user_id).all()
     return [c.to_dict() for c in consultations]
+
+
+def list_doctors_flat(specialty_id: int):
+    results = (
+        db.session.query(Doctor, DoctorSchedule, Hospital)
+        .join(DoctorSchedule, Doctor.id == DoctorSchedule.doctor_id)
+        .join(Hospital, DoctorSchedule.hospital_id == Hospital.id)
+        .filter(Doctor.specialty_id == specialty_id, Doctor.available == True)
+        .all()
+    )
+
+    output = []
+
+    for doctor, schedule, hospital in results:
+        output.append({
+            "doctor_id": doctor.id,
+            "doctor_name": doctor.name,
+            "day": schedule.day_of_week,
+            "start_time": str(schedule.start_time),
+            "end_time": str(schedule.end_time),
+            "hospital": hospital.name
+        })
+
+    return output

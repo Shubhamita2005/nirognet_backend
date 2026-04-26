@@ -13,6 +13,9 @@ book_bp = Blueprint("book_consultation", __name__)
 book_bp.route("/api/specialties", methods=["GET"])(get_specialties)
 
 # Auth required
-book_bp.route("/api/specialties/<int:specialty_id>/doctors", methods=["GET"])(jwt_required()(get_doctors))
+book_bp.route(
+    "/api/specialties/<int:specialty_id>/doctors",
+    methods=["GET"]
+)((get_doctors))
 book_bp.route("/api/consultations", methods=["POST"])(jwt_required()(create_consultation))
 book_bp.route("/api/consultations", methods=["GET"])(jwt_required()(get_my_consultations))
